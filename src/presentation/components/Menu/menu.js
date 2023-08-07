@@ -6,7 +6,7 @@ const Menu = () => {
     return (
         <div className='botoes'>
                 <div className='top'>{/*Buttons da parte de cima, Cadastrar e Retirar*/}
-                    <span className="top"><a className='buttonOne' href='/menu/cadastros'><div className='text-button'><AiOutlineArrowUp /><b> Cadastrar</b></div></a></span>
+                    <span className="top"><a className='buttonOne' href='/categoria/cadastro'><div className='text-button'><AiOutlineArrowUp /><b> Cadastrar</b></div></a></span>
                     <a className='buttonTwo' href='/Retirada'><div className='text-button'><AiOutlineArrowDown/><b> Retirar</b></div></a>
                 </div>
                 <div className='down'>{/*Buttons da parte de baixo, Listar P. e Relatório*/}

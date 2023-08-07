@@ -3,6 +3,7 @@ import Login from '../presentation/pages/rotaLogin.js';
 import Menu from '../presentation/pages/rotaMenu.js';
 import Cadastro from '../presentation/pages/rotaCadastro.js';
 import Pecas from '../presentation/pages/rotaPecas.js';
+import CadastrarCategoria from '../presentation/pages/rotaCategoriaCad.js';
 //import PrivateRoutes from './utils/privateRoute';
 
 function RouterApp() { 
@@ -13,6 +14,7 @@ function RouterApp() {
                 <Route path="/menu" element={<Menu/>}/>
                 <Route path="/cadastros" element={<Cadastro/>}/>
                 <Route path="/pecas" element={<Pecas/>}/>
+                <Route path="/categoria/cadastro" element={<CadastrarCategoria/>}/> "
             </Routes>
         </Router>
     );

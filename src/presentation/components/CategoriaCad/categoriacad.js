@@ -22,9 +22,10 @@ const CadastrarCategoria = () => {
       }, {}),
     };
     try {
-      const res = await Axios.post('/entrar', dados);
+      const res = await Axios.post('/categorias', dados);
       if (!res.data.erro) {
-        // Faça alguma ação após o envio bem-sucedido
+        console.log(res.data);
+
       }
     } catch (err) {
       console.error(err);
@@ -44,6 +45,16 @@ const CadastrarCategoria = () => {
     }
   };
 
+  const removerAtributo = () => {
+    if(atributos.length >= 3) { 
+        const novosAtributos = [...atributos]; // Crie uma cópia dos atributos
+        console.log("copia", novosAtributos);
+        novosAtributos.pop(); // Remova o último atributo
+        console.log("removido", novosAtributos);
+        setAtributos(novosAtributos);
+    }
+  };
+  
   return (
     <div className="container-fluid">
       <div className="row">
@@ -68,16 +79,29 @@ const CadastrarCategoria = () => {
                           placeholder={`Atributo ${index + 1}`}
                           value={atributo}
                           onChange={e => handleAtributoChange(index, e.target.value)}
-                          required={index < 3} // Definir como obrigatório apenas os três primeiros atributos
+                          required={index < 6}
                         />
                       </div>
                       {index === atributos.length - 1 && index < 5 && (
                         <div className="btn-wrapper">
-                          <Button type="button" className="btn btn-primary" onClick={adicionarAtributo}>
-                            +
+                          <Button type="button"
+                            className="btn btn-primary"
+                            style={{ width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center'  }}
+                            onClick={adicionarAtributo}>
+                          <strong> + </strong>
                           </Button>
                         </div>
                       )}
+                        {index === atributos.length - 1 && index >= 3 && (
+                            <div className="btn-wrapper">
+                                <Button type="button"
+                                    className="btn btn-danger"
+                                    style={{ width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center'  }}
+                                    onClick={removerAtributo}>
+                                    <strong> - </strong>
+                                </Button>
+                            </div>
+                        )}
                     </div>
                   ))}
                 </div>

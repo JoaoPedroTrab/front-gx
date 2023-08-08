@@ -63,6 +63,7 @@ const CadastrarCategoria = () => {
             <div className="cadastrocat">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
+                    <h3 className='mb-3' style={{display: 'flex', alignItems: 'center', flexDirection: 'center', justifyContent: 'center'}}><strong>Adicionar Categoria</strong></h3>
                   <div className='elements'>
                     <Form.Control type="text" placeholder="Nome" value={nome}
                       onChange={e => setNome(e.target.value)} required />

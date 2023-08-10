@@ -4,7 +4,7 @@ import Logo from '../../assets/logo_pms.png';
 import { FaSearch, FaSignOutAlt  } from 'react-icons/fa';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { setSelectionRange } from '@testing-library/user-event/dist/utils';
+import SearchBar from '../SearchBar/searchBar';
 
 function Header() {
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -31,12 +31,8 @@ function Header() {
         <Navbar.Toggle aria-controls="navbar-nav" />
         <Navbar.Collapse id="navbar-nav">
         <Form className="d-flex justify-content-center flex-grow-1 align-items-center">
-            <InputGroup style={{ maxWidth: '275px' }}> {/* Adjust the width as needed */}
-              <FormControl
-                type="search"
-                placeholder="Busca rápida"
-                aria-label="search"
-              />
+            <InputGroup style={{ maxWidth: '275px' }}> 
+              <SearchBar style={{height: '38px'}} placeholder="Pesquisa..." data={"DATA VIA REQUISIÇAO API - JOTAPE NAO FEZ AINDA"}/> {/* VOLTAR AQUI DEPOIS*/  } 
               <Button className="search-button" variant="primary">
                 <FaSearch />
               </Button>

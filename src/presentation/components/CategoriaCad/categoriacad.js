@@ -24,8 +24,8 @@ const CadastrarCategoria = () => {
     try {
       const res = await Axios.post('/categorias', dados);
       if (!res.data.erro) {
+        console.log(`Erro: ${res.data.erro}`);
         console.log(res.data);
-
       }
     } catch (err) {
       console.error(err);
@@ -47,13 +47,21 @@ const CadastrarCategoria = () => {
 
   const removerAtributo = () => {
     if(atributos.length >= 3) { 
-        const novosAtributos = [...atributos]; // Crie uma cópia dos atributos
-        console.log("copia", novosAtributos);
-        novosAtributos.pop(); // Remova o último atributo
-        console.log("removido", novosAtributos);
+        const novosAtributos = [...atributos]; 
+        novosAtributos.pop(); 
         setAtributos(novosAtributos);
     }
   };
+
+  function SelecaoTipo() {
+    return (
+      <Form.Select required value={tipo} onChange={e => setTipo(e.target.value)}>
+        <option selected disabled value="">Selecione o tipo de categoria</option>
+        <option value="P">Peça</option>
+        <option value="E">Equipamento</option>
+      </Form.Select>
+    );
+  }
   
   return (
     <div className="container-fluid">
@@ -62,50 +70,78 @@ const CadastrarCategoria = () => {
           <div className="categoria-container">
             <div className="cadastrocat">
               <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <h3 className='mb-3' style={{display: 'flex', alignItems: 'center', flexDirection: 'center', justifyContent: 'center'}}><strong>Adicionar Categoria</strong></h3>
-                  <div className='elements'>
-                    <Form.Control type="text" placeholder="Nome" value={nome}
+                <div className="forms-header">
+                  <h3 className='mb-4' style=
+                  {{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <strong>Adicionar Categoria</strong>
+                  </h3>
+                </div>
+                  <div className="form-group">
+                    <div className='elements'>
+                      <Form.Control type="text" placeholder="Nome" value={nome}
                       onChange={e => setNome(e.target.value)} required />
-                  </div>
-                  <div className='elements'>
-                    <Form.Control type="text" placeholder="Tipo" value={tipo}
-                      onChange={e => setTipo(e.target.value)} required />
-                  </div>
-                  {atributos.map((atributo, index) => (
-                    <div className="atributo-wrapper" key={index}>
-                      <div className='elements'>
-                        <Form.Control
-                          type="text"
-                          placeholder={`Atributo ${index + 1}`}
-                          value={atributo}
-                          onChange={e => handleAtributoChange(index, e.target.value)}
-                          required={index < 6}
-                        />
-                      </div>
+                    </div>
+                    <div className='elements'>
+                      <SelecaoTipo/>
+                    </div>
+                    {atributos.map((atributo, index) => (
+                      <div className="atributo-wrapper" key={index}>
+                        <div className='elements'>
+                          <Form.Control
+                            type="text"
+                            placeholder={`Atributo ${index + 1}`}
+                            value={atributo}
+                            onChange={e => handleAtributoChange(index, e.target.value)}
+                            required={index < 6}
+                          />
+                        </div>
                       {index === atributos.length - 1 && index < 5 && (
                         <div className="btn-wrapper">
                           <Button type="button"
                             className="btn btn-primary"
-                            style={{ width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center'  }}
+                            style=
+                            {{
+                              width: '38px',
+                              height: '38px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
                             onClick={adicionarAtributo}>
-                          <strong> + </strong>
+                            <strong> + </strong>
                           </Button>
                         </div>
                       )}
                         {index === atributos.length - 1 && index >= 3 && (
                             <div className="btn-wrapper">
-                                <Button type="button"
-                                    className="btn btn-danger"
-                                    style={{ width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center'  }}
-                                    onClick={removerAtributo}>
-                                    <strong> - </strong>
-                                </Button>
+                              <Button type="button"
+                                className="btn btn-danger"
+                                style=
+                                {{
+                                  width: '38px',
+                                  height: '38px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}
+                                onClick={removerAtributo}>
+                                <strong> - </strong>
+                              </Button>
                             </div>
-                        )}
-                    </div>
-                  ))}
-                </div>
+                          )}
+                        </div>
+                      ))}
+                      {erro && (
+                        <div className="alert alert-warning" role="alert">
+                          {erro}
+                        </div>
+                    )}
+                  </div>
                 <div className='elements'>
                   <Button type="submit" className="btn btn-primary btn-block">Cadastrar</Button>
                 </div>

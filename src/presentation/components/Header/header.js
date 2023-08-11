@@ -5,9 +5,21 @@ import { FaSearch, FaSignOutAlt  } from 'react-icons/fa';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SearchBar from '../SearchBar/searchBar';
+import Axios from '../../../infra/api/Axios.js';
+import { useEffect } from 'react';
+
 
 function Header() {
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    Axios.get("/categorias")
+    .then(res => {
+      setData(res.data);
+    })
+    .catch(err => console.log(err));
+}, []);
 
   const handleNavbarToggle = () => {
     setIsCollapsed((prevCollapsed) => !prevCollapsed);
@@ -23,7 +35,7 @@ function Header() {
       <Navbar bg="dark" variant="dark" expand="lg" onToggle={handleNavbarToggle}>
         <Container fluid>
           <Navbar.Brand>
-            <Link to="/">
+            <Link to="/menu">
               <img alt="img-logo" className="imgNav" src={Logo} />
               <span className="logoNav"><strong>ESTOQUE</strong></span>
             </Link>
@@ -32,7 +44,7 @@ function Header() {
         <Navbar.Collapse id="navbar-nav">
         <Form className="d-flex justify-content-center flex-grow-1 align-items-center">
             <InputGroup style={{ maxWidth: '275px' }}> 
-              <SearchBar style={{height: '38px'}} placeholder="Pesquisa..." data={"DATA VIA REQUISIÇAO API - JOTAPE NAO FEZ AINDA"}/> {/* VOLTAR AQUI DEPOIS*/  } 
+              <SearchBar style={{height: '38px'}} placeholder="Pesquisa..." data={data}/> 
               <Button className="search-button" variant="primary">
                 <FaSearch />
               </Button>

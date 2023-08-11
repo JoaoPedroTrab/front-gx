@@ -7,7 +7,7 @@ function SearchBar({placeholder, data}) {
   const [dataFiltrada, setDataFiltrada] = useState([]);
 
   function mapResults() {
-    return dataFiltrada.slice(0, 5).map((value, key) => {
+    return dataFiltrada.slice(0, 10).map((value, key) => {
       return (
       <a className="data-item" target="_blank">
         <p>{value.nome}</p>

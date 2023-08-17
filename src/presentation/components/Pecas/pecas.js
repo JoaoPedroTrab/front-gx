@@ -4,11 +4,21 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import {useNavigate} from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
+import ModalCad from '../ModalCad/modalcad.js';
 import './pecas.css';
 
 const Pecas = () => {
     const [data, setData] = useState([]);
     const navigate = useNavigate();
+    const [exibirModal, setExibirModal] = useState(false);
+
+    const handleShow = () => {
+        setExibirModal(true);
+      };
+    
+      const handleClose = () => {
+        setExibirModal(false);
+      };
 
     useEffect(() => {
         Axios.get("/especificacoes")
@@ -24,6 +34,8 @@ const Pecas = () => {
         navigate(`/pecas/${id}`);  
     }
 
+    
+
     const columns = [
         { field: 'id', headerName: 'ID', width: 70},
         { field: 'SKU', headerName: 'SKU', width: 150 },
@@ -37,9 +49,11 @@ const Pecas = () => {
     return (
         <div className="pecas">
             <div className="buttonArea">
-                <Button className="botaocadastro" variant="primary">Nova Peça</Button>{''}
+                <Button className="botaocadastro" variant="primary" onClick={handleShow}>Nova Peça</Button>
             </div>
-  
+
+            <ModalCad show={exibirModal} handleClose = {handleClose} />
+
             <div style={{ height: 700, width: '100%', margin: 'auto' }}>
                 <DataGrid
                     rows={data}

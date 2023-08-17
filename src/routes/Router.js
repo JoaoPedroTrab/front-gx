@@ -4,6 +4,7 @@ import Menu from '../presentation/pages/rotaMenu.js';
 import Cadastro from '../presentation/pages/rotaCadastro.js';
 import Pecas from '../presentation/pages/rotaPecas.js';
 import CadastrarCategoria from '../presentation/pages/rotaCategoriaCad.js';
+import modalCad from '../presentation/pages/rotaModalCad.js';
 //import PrivateRoutes from './utils/privateRoute';
 
 function RouterApp() { 

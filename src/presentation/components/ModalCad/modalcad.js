@@ -40,14 +40,14 @@ function ModalCad({show, handleClose}) {
         }
     }
 
-    function renderSubForms() {
+    function renderSubForms() { // opcoes  após o selecione 
 
         const subFormsById = subForms.filter(subForm => String(subForm.id) === String(selectedValue));
         if (selectedValue && selectedValue !== "" || mostrarValue) { 
           return (
             <div>
               {mostrarValue && (
-                <div>
+                <div>  {/* first input quantidade  */ } 
                   <Form.Label>Insira a quantidade:</Form.Label>
                   <Form.Control type="number" id="saldo" name="saldo"/>
                   {console.log("teste 1")}
@@ -56,7 +56,7 @@ function ModalCad({show, handleClose}) {
               {selectedValue && selectedValue !== "" && (
                 <div>
                   {console.log("teste 2")}
-                  {console.log(subFormsById)}
+                  {console.log(subFormsById)} {/*  mapeia os subinputs que começam com "atrib"  */}
                   {subFormsById.map(subForm => (
                     <div key={subForm.id}>
                       {Object.keys(subForm).filter(key => key.startsWith('atrib') ).map(catKey => (
@@ -66,7 +66,6 @@ function ModalCad({show, handleClose}) {
                           {console.log("teste 3")}
                         </div>
                       ))}
-                      {console.log("teste 4")}
                     </div>
                   ))}
                 </div>
@@ -111,6 +110,7 @@ function ModalCad({show, handleClose}) {
           alert("Peça cadastrada com sucesso");
         } catch (error) {
           console.error(error);
+          alert("error")
         }
       };
     

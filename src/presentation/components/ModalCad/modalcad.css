@@ -1,0 +1,9 @@
+.modal-header { 
+    background-color: rgba(143, 143, 143, 0.25);
+}
+.modal-body {
+    background-color: rgba(143, 143, 143, 0.10);
+}
+.modal-footer {
+    background-color: rgba(143, 143, 143, 0.10);
+}

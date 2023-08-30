@@ -154,7 +154,7 @@ const CadastrarCategoria = () => {
             <Toast.Header className="bg-danger text-white">
               <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
               <strong className="me-auto">Cadastro</strong>
-              <small>just now</small>
+              <small>jotape careca</small>
             </Toast.Header>
             <Toast.Body>{erro}</Toast.Body>
           </Toast>

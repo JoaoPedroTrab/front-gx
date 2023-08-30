@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import Axios from '../../../infra/api/Axios.js';
+import Axios from '../../../infra/api/Axios'
+import { BsFillPlusCircleFill }  from 'react-icons/bs'
+import './modalcad.css'
 
 function ModalCad({show, handleClose}) {
     const [selectedValue, setSelectedValue] = useState("");
@@ -119,7 +121,7 @@ function ModalCad({show, handleClose}) {
         <>
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Adicionar Peça</Modal.Title>
+                <Modal.Title style={{ display: 'flex', alignItems: 'center' }}> <BsFillPlusCircleFill style={{marginRight: '10px'}}/> Adicionar Peça</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>

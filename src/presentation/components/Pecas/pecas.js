@@ -1,10 +1,10 @@
 import React, {useEffect, useState } from "react";
 import Axios from "../../../infra/api/Axios";
-import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
 import {useNavigate} from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import ModalCad from '../ModalCad/modalcad.js';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import './pecas.css';
 
 const Pecas = () => {
@@ -21,11 +21,9 @@ const Pecas = () => {
       };
 
     useEffect(() => {
-        Axios.get("/especificacoes")
+        Axios.get("/categorias")
         .then(res => {
-           const dataWithKeys = res.data.map((item, index) => ({ ...item, id: index + 1 }));
-           setData(dataWithKeys);
-           console.log(dataWithKeys);
+           setData(res.data);
         })
         .catch(err => console.log(err));
     }, []);
@@ -33,8 +31,6 @@ const Pecas = () => {
     function redirecionar(id) {
         navigate(`/pecas/${id}`);  
     }
-
-    
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70},
@@ -44,12 +40,16 @@ const Pecas = () => {
         { field: 'saldo', headerName: 'Saldo', width: 120 },
         { field: 'marca', headerName: 'Marca', width: 150 },
         { field: 'modelo', headerName: 'Modelo', width: 150 },
+        { field: 'tipo', headerName: 'Tipo', width: 150, renderCell: (params) => params.value === 'P' ? 'PEÇA' : (params.value === 'E' ? 'EQUIPAMENTO' : '') },
       ];
 
     return (
         <div className="pecas">
             <div className="buttonArea">
-                <Button className="botaocadastro" variant="primary" onClick={handleShow}>Nova Peça</Button>
+                <DropdownButton id="dropdown-basic-button" title="Cadastrar">
+                    <Dropdown.Item onClick={handleShow} >Nova Peça</Dropdown.Item>
+                    <Dropdown.Item onClick={handleShow} >Nova Categoria</Dropdown.Item>
+                </DropdownButton>
             </div>
 
             <ModalCad show={exibirModal} handleClose = {handleClose} />
@@ -58,9 +58,8 @@ const Pecas = () => {
                 <DataGrid
                     rows={data}
                     columns={columns}
-                    count={-1}
                     pageSize={10}
-                    rowsPerPage={[10]}
+                    rowsPerPageOptions={[10]}
                     onRowClick={(params) => redirecionar(params.row.id)}
                 />
             </div>

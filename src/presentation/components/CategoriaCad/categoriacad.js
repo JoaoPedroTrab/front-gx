@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import './categoriacad.css';
 import { Form, Button } from 'react-bootstrap';
 import Axios from '../../../infra/api/Axios.js';
-import { useNavigate } from 'react-router-dom';
-import Toast from 'react-bootstrap/Toast';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import ToastComponent from '../Toast/ToastComponent';
 
 const CadastrarCategoria = () => {
   const [nome, setNome] = useState('');
   const [tipo, setTipo] = useState('');
   const [atributos, setAtributos] = useState(['', '', '']);
-  const [erro, setErro] = useState('');
-  const navigate = useNavigate();
+  const [toastInfo, setToastInfo] = useState({
+    show: false,
+    tipo: '',
+    mensagem: '',
+  });
+
+  const handleCloseToast = () => {
+    setToastInfo({ ...toastInfo, show: false });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,15 +31,23 @@ const CadastrarCategoria = () => {
     try {
       const res = await Axios.post('/categorias', dados);
       if (!res.data.erro) {
-        console.log(`Erro: ${res.data.erro}`);
         console.log(res.data);
+        setToastInfo({
+          show: true,
+          tipo: 'sucesso',
+          mensagem: res.data.message,
+        });
       }
     } catch (err) {
       console.error(err);
-      setErro('Erro ao enviar o formulário!');
+      setToastInfo({
+        show: true,
+        tipo: 'erro',
+        mensagem: err.response.data.message,
+      });
     }
   };
-
+    
   const handleAtributoChange = (index, value) => {
     const novosAtributos = [...atributos];
     novosAtributos[index] = value;
@@ -146,18 +158,12 @@ const CadastrarCategoria = () => {
               </form>
             </div>
           </div>
-          <Toast onClose={() => setErro(false)} show={erro} autohide delay={20000}
-            style={{
-              position: 'fixed',
-              bottom: '20px',
-            }}>
-            <Toast.Header className="bg-danger text-white">
-              <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-              <strong className="me-auto">Cadastro</strong>
-              <small>jotape careca</small>
-            </Toast.Header>
-            <Toast.Body>{erro}</Toast.Body>
-          </Toast>
+          <ToastComponent
+            show={toastInfo.show}
+            onClose={handleCloseToast}
+            tipo={toastInfo.tipo}
+            mensagem={toastInfo.mensagem}
+          />
         </div>
       </div>
     </div>

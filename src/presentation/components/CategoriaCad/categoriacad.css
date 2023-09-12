@@ -14,11 +14,6 @@
     height: 85vh;
   }
   
-  .form-group{
-    padding: 20px;
-    padding: 30px 60px 0px 60px ; 
-  }
-
   .atributos-wrapper {
     display: flex;
     flex-direction: column;
@@ -28,7 +23,6 @@
   .atributo-wrapper {
     display: flex;
     align-items: center;
-    margin-bottom: 10px; 
   }
 
   .btn-wrapper {
@@ -39,14 +33,16 @@
   .forms-header{
     background-color: rgba(143, 143, 143, 0.20);
     width: 100%;
-    padding-top: 15px;
-    padding-bottom: 0px;
     border-radius: 15px 15px 0px 0px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
     text-align: center;
+  }
+
+  .elements{
+    padding-bottom: 11px !important;
   }
   
   .elements Button {

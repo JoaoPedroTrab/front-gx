@@ -3,7 +3,7 @@ import Toast from 'react-bootstrap/Toast';
 
 function ToastComponent({ show, onClose, tipo, mensagem }) {
   return (
-    <Toast onClose={onClose} show={show} autohide delay={2000}
+    <Toast onClose={onClose} show={show} autohide delay={200000}
       style={{
         position: 'fixed',
         bottom: '20px',

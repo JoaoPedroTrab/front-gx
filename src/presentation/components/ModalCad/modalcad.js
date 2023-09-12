@@ -6,7 +6,10 @@ import Axios from '../../../infra/api/Axios'
 import { BsFillPlusCircleFill }  from 'react-icons/bs'
 import './modalcad.css'
 
-function ModalCad({show, handleClose}) {
+function ModalCad({show, handleClose, tipoCadastro}) {
+  const [nome, setNome] = useState('');
+  const [tipo, setTipo] = useState('');
+  const [atributos, setAtributos] = useState(['', '', '']);
     const [selectedValue, setSelectedValue] = useState("");
     const [options, setOptions] = React.useState([]);
     const [mostrarValue, setMostrarValue] = useState(false);
@@ -16,6 +19,7 @@ function ModalCad({show, handleClose}) {
         async function fetchOptionsData() {
         try {
             const res = await Axios.get('/categorias');
+            console.log(res)
             setOptions(res.data);
         } catch (err) {
             console.error(err);
@@ -42,9 +46,65 @@ function ModalCad({show, handleClose}) {
         }
     }
 
+    const handleSubmitCategoria = async (e) => {
+      e.preventDefault();
+      const dados = {
+        nome,
+        tipo,
+        ...atributos.reduce((acc, atrib, index) => {
+          acc[`atrib${index + 1}`] = atrib;
+          return acc;
+        }, {}),
+      };
+      console.log("1");
+      console.log(dados);
+      try {
+        const res = await Axios.post('/categorias', dados);
+        if (!res.data.erro) {
+          console.log(res);
+          console.log(res.data);
+        }
+      } catch (err) {
+        console.error(err);
+        console.log("2");
+        console.log(dados);
+      }
+    };
+      
+    const handleAtributoChange = (index, value) => {
+      const novosAtributos = [...atributos];
+      novosAtributos[index] = value;
+      setAtributos(novosAtributos);
+    };
+  
+    const adicionarAtributo = () => {
+      if (atributos.length < 6) {
+        setAtributos([...atributos, '']);
+      }
+    };
+  
+    const removerAtributo = () => {
+      if(atributos.length >= 3) { 
+          const novosAtributos = [...atributos]; 
+          novosAtributos.pop(); 
+          setAtributos(novosAtributos);
+      }
+    };
+  
+    function SelecaoTipo() {
+      return (
+        <Form.Select required value={tipo} onChange={e => setTipo(e.target.value)}>
+          <option selected disabled value="">Selecione o tipo de categoria</option>
+          <option value="P">Peça</option>
+          <option value="E">Equipamento</option>
+        </Form.Select>
+      );
+    }
+
     function renderSubForms() { // opcoes  após o selecione 
 
         const subFormsById = subForms.filter(subForm => String(subForm.id) === String(selectedValue));
+        // eslint-disable-next-line no-mixed-operators
         if (selectedValue && selectedValue !== "" || mostrarValue) { 
           return (
             <div>
@@ -88,6 +148,7 @@ function ModalCad({show, handleClose}) {
     
         console.log(subFormsById)
     
+        // eslint-disable-next-line array-callback-return
         subFormsById.map(subForm => { // mapeia o subforms 
           Object.keys(subForm).forEach(key => { //transforma em array e verifica os elementos
             if (key.endsWith("_cat")) {  //se terminar em _cat
@@ -107,55 +168,142 @@ function ModalCad({show, handleClose}) {
         formDataJson.fk_categorias_id = fk_categorias_id;
         console.log(formDataJson);
         try {
-          const response = await Axios.post("http://172.22.2.22:3030/api/especificacoes", formDataJson);
+          const response = await Axios.post("/api/especificacoes", formDataJson);
           console.log(response.data);
           alert("Peça cadastrada com sucesso");
         } catch (error) {
           console.error(error);
           alert("error")
         }
+        handleClose();
       };
     
 
-    return (
+      return (
         <>
-        <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title style={{ display: 'flex', alignItems: 'center' }}> <BsFillPlusCircleFill style={{marginRight: '10px'}}/> Adicionar Peça</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+          {tipoCadastro === 'E' ? (
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title style={{ display: 'flex', alignItems: 'center' }}>
+                  <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Especificação
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
                 <Form onSubmit={handleSubmit}>
-                <Form.Label>Selecione a peça a ser adicionada:</Form.Label>
-                <Form.Control as="select" value={selectedValue} onChange={handleOptionChange}>
-                    <option selected disabled value="">Selecione...</option>
+                  <Form.Label>Selecione a peça a ser adicionada:</Form.Label>
+                  <Form.Control as="select" value={selectedValue} onChange={handleOptionChange}>
+                    <option selected disabled value="">
+                      Selecione...
+                    </option>
                     {options.map(option => (
-                        <option key={option.id} value={option.id}>
-                            {option.nome}
-                        </option>
+                      <option key={option.id} value={option.id}>
+                        {option.nome}
+                      </option>
                     ))}
-                </Form.Control>
-                {selectedValue && (
-                  <>
-                    {subForms.length > 0 ? (
-                      renderSubForms()
-                    ) : (
-                      <div>Carregando...</div> 
-                    )}
-                  </>
-                )}
+                  </Form.Control>
+                  {selectedValue && (
+                    <>
+                      {subForms.length > 0 ? (
+                        renderSubForms()
+                      ) : (
+                        <div>Carregando...</div>
+                      )}
+                    </>
+                  )}
                 </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Cancelar
-            </Button>
-            <Button variant="primary" onClick={handleClose}>
-              Adicionar
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </>
-    )
-  }
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                  Cancelar
+                </Button>
+                <Button variant="primary" type="submit">
+                  Adicionar
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          ) 
+          : tipoCadastro === 'C' ? 
+          (
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title style={{ display: 'flex', alignItems: 'center' }}>
+                  <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Categoria
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form onSubmit={handleSubmitCategoria}>
+                    <div className="form-group">
+                      <div className='elements'>
+                        <Form.Control type="text" placeholder="Nome" value={nome}
+                        onChange={e => setNome(e.target.value)} required />
+                      </div>
+                      <div className='elements'>
+                        <SelecaoTipo/>
+                      </div>
+                      {atributos.map((atributo, index) => (
+                        <div className="atributo-wrapper" key={index}>
+                          <div className='elements'>
+                            <Form.Control
+                              type="text"
+                              placeholder={`Atributo ${index + 1}`}
+                              value={atributo}
+                              onChange={e => handleAtributoChange(index, e.target.value)}
+                              required={index < 6}
+                            />
+                          </div>
+                        {index === atributos.length - 1 && index < 5 && (
+                          <div className="btn-wrapper">
+                            <Button type="button"
+                              className="btn btn-primary"
+                              style=
+                              {{
+                                width: '38px',
+                                height: '38px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                              onClick={adicionarAtributo}>
+                              <strong> + </strong>
+                            </Button>
+                          </div>
+                        )}
+                          {index === atributos.length - 1 && index >= 3 && (
+                              <div className="btn-wrapper">
+                                <Button type="button"
+                                  className="btn btn-danger"
+                                  style=
+                                  {{
+                                    width: '38px',
+                                    height: '38px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                  }}
+                                  onClick={removerAtributo}>
+                                  <strong> - </strong>
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                    </div>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                  Cancelar
+                </Button>
+                <Button variant="primary" type= "submit" onClick={handleSubmitCategoria}>
+                  Adicionar
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          )
+           : null}
+        </>
+      );
+      
+}
 
 export default ModalCad

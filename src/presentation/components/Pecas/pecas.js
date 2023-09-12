@@ -5,23 +5,37 @@ import { DataGrid } from '@mui/x-data-grid';
 import ModalCad from '../ModalCad/modalcad.js';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Button from 'react-bootstrap/Button';
+import { IoBarChart } from "react-icons/io5";
 import './pecas.css';
 
 const Pecas = () => {
     const [data, setData] = useState([]);
     const navigate = useNavigate();
-    const [exibirModal, setExibirModal] = useState(false);
+    const [exibirModalE, setExibirModalE] = useState(false);
+    const [exibirModalC, setExibirModalC] = useState(false);
+    const [tipoCadastro, setTipoCadastro] = useState('');
 
-    const handleShow = () => {
-        setExibirModal(true);
+    const handleShowE = () => {
+        setTipoCadastro('E');
+        setExibirModalE(true);
       };
     
-      const handleClose = () => {
-        setExibirModal(false);
+    const handleShowC = () => {
+        setTipoCadastro('C');
+        setExibirModalC(true);
+    };
+    
+    const handleCloseE = () => {
+        setExibirModalE(false);
+    };
+
+    const handleCloseC = () => {
+        setExibirModalC(false);
       };
 
     useEffect(() => {
-        Axios.get("/categorias")
+        Axios.get("/especificacoes")
         .then(res => {
            setData(res.data);
         })
@@ -46,13 +60,19 @@ const Pecas = () => {
     return (
         <div className="pecas">
             <div className="buttonArea">
-                <DropdownButton id="dropdown-basic-button" title="Cadastrar">
-                    <Dropdown.Item onClick={handleShow} >Nova Peça</Dropdown.Item>
-                    <Dropdown.Item onClick={handleShow} >Nova Categoria</Dropdown.Item>
-                </DropdownButton>
+                <div className="buttons">
+                    <DropdownButton id="dropdown-basic-button" title="Cadastrar... ">
+                        <Dropdown.Item onClick={handleShowE} >Nova Especificação</Dropdown.Item>
+                        <Dropdown.Item onClick={handleShowC} >Nova Categoria</Dropdown.Item>
+                    </DropdownButton>
+                </div>
+                <div className="buttons">
+                <Button variant="primary"> <IoBarChart/> Relatórios</Button>
+                </div> 
             </div>
 
-            <ModalCad show={exibirModal} handleClose = {handleClose} />
+            <ModalCad show={exibirModalE} handleClose = {handleCloseE} tipoCadastro = {tipoCadastro}/>
+            <ModalCad show={exibirModalC} handleClose = {handleCloseC} tipoCadastro= {tipoCadastro}/>
 
             <div style={{ height: 700, width: '100%', margin: 'auto' }}>
                 <DataGrid

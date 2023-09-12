@@ -24,11 +24,11 @@ const Login = () => {
             if (!res.data.erro) {
                 const tokenRecebido = res.data.token //armazena o token na variavel tokenrecebido
                 localStorage.setItem('token', tokenRecebido); //armazena o token no localstorage
-                navigate('/menu'); //redireciona para a rota /menu  
+                navigate('/pecas'); //redireciona para a rota /menu  
             }
         }catch (err) {
             console.error(err);
-            setErro('Usuário e/ou senha incorretos!'); 
+            setErro('Usuário ou senha incorretos.'); //ver depois como jp manda do banco 
         }
 
     };

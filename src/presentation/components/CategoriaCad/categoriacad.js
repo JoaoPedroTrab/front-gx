@@ -31,11 +31,12 @@ const CadastrarCategoria = () => {
     try {
       const res = await Axios.post('/categorias', dados);
       if (!res.data.erro) {
+        console.log(res)
         console.log(res.data);
         setToastInfo({
           show: true,
           tipo: 'sucesso',
-          mensagem: res.data.message,
+          mensagem: res.status + ` : ` + res.data.message,
         });
       }
     } catch (err) {
@@ -43,7 +44,7 @@ const CadastrarCategoria = () => {
       setToastInfo({
         show: true,
         tipo: 'erro',
-        mensagem: err.response.data.message,
+        mensagem: `ERRO ${err.response.status}: ${err.response.data.message}`,
       });
     }
   };

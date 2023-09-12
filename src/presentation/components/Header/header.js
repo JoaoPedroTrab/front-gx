@@ -27,7 +27,7 @@ function Header() {
 
   const logoff = () => {
     localStorage.removeItem('token');
-    window.location.href = '/login';
+    window.location.href = '/';
   }
 
   return (
@@ -35,7 +35,7 @@ function Header() {
       <Navbar bg="dark" variant="dark" expand="lg" onToggle={handleNavbarToggle}>
         <Container fluid>
           <Navbar.Brand>
-            <Link to="/menu">
+            <Link to="/pecas">
               <img alt="img-logo" className="imgNav" src={Logo} />
               <span className="logoNav"><strong>ESTOQUE</strong></span>
             </Link>

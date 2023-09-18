@@ -28,6 +28,9 @@ const CadastrarCategoria = () => {
         return acc;
       }, {}),
     };
+
+    console.log("Dados a serem enviados:", dados);
+
     try {
       const res = await Axios.post('/categorias', dados);
       if (!res.data.erro) {

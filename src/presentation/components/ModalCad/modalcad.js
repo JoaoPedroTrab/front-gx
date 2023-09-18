@@ -6,14 +6,14 @@ import Axios from '../../../infra/api/Axios'
 import { BsFillPlusCircleFill }  from 'react-icons/bs'
 import './modalcad.css'
 
-function ModalCad({show, handleClose, tipoCadastro}) {
+function ModalCad({show, handleClose, tipoCadastro, toastInfo, setToastInfo}) {
   const [nome, setNome] = useState('');
   const [tipo, setTipo] = useState('');
   const [atributos, setAtributos] = useState(['', '', '']);
-    const [selectedValue, setSelectedValue] = useState("");
-    const [options, setOptions] = React.useState([]);
-    const [mostrarValue, setMostrarValue] = useState(false);
-    const [subForms, setSubForms] = useState([]);
+  const [selectedValue, setSelectedValue] = useState("");
+  const [options, setOptions] = React.useState([]);
+  const [mostrarValue, setMostrarValue] = useState(false);
+  const [subForms, setSubForms] = useState([]);
 
     useEffect(() => {
         async function fetchOptionsData() {
@@ -47,28 +47,49 @@ function ModalCad({show, handleClose, tipoCadastro}) {
     }
 
     const handleSubmitCategoria = async (e) => {
+      console.log("submit categoria")
       e.preventDefault();
       const dados = {
         nome,
         tipo,
         ...atributos.reduce((acc, atrib, index) => {
-          acc[`atrib${index + 1}`] = atrib;
+          acc[`atrib${index + 1}_cat`] = atrib;
           return acc;
         }, {}),
       };
-      console.log("1");
-      console.log(dados);
+      
+      console.log("Dados a serem enviados:", dados);
+    
       try {
         const res = await Axios.post('/categorias', dados);
+        console.log("Resposta do servidor:", res);
+    
         if (!res.data.erro) {
-          console.log(res);
-          console.log(res.data);
+          console.log("Categoria criada com sucesso!");
+          console.log("Dados da categoria criada:", res.data);
+          setToastInfo({
+            show: true,
+            tipo: 'sucesso',
+            mensagem: `${res.status} : ${res.data.message}.`,
+          });
+          console.log("depois do toast true");
+        } else {
+          setToastInfo({
+            show: true,
+            tipo: 'erro',
+            mensagem: `Erro ao cadastrar categoria.`,
+          });
+          console.error("Erro ao criar categoria:", res.data.erro);
         }
       } catch (err) {
-        console.error(err);
-        console.log("2");
-        console.log(dados);
+        setToastInfo({
+          show: true,
+          tipo: 'erro',
+          mensagem: `Erro  ${err.response.status} : ${err.response.data.message}`,
+        });
+        console.error("Erro na solicitação:", err);
       }
+      handleClose();
     };
       
     const handleAtributoChange = (index, value) => {
@@ -142,7 +163,8 @@ function ModalCad({show, handleClose, tipoCadastro}) {
         e.preventDefault();
         const subFormsById = subForms.filter(subForm => String(subForm.id) === String(selectedValue));
         const fk_categorias_id = parseInt(selectedValue);
-        const formData = new FormData(e.target);
+        const formElement = document.forms['formsEspecificaco']
+        const formData = new FormData(formElement);
         const saldo = parseInt(formData.get('saldo'));
         const formDataJson = {};
     
@@ -168,70 +190,71 @@ function ModalCad({show, handleClose, tipoCadastro}) {
         formDataJson.fk_categorias_id = fk_categorias_id;
         console.log(formDataJson);
         try {
-          const response = await Axios.post("/api/especificacoes", formDataJson);
+          const response = await Axios.post("/especificacoes", formDataJson);
           console.log(response.data);
           alert("Peça cadastrada com sucesso");
         } catch (error) {
           console.error(error);
-          alert("error")
+          alert("Erro ao cadastrar peça");
         }
         handleClose();
       };
     
-
-      return (
-        <>
-          {tipoCadastro === 'E' ? (
-            <Modal show={show} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title style={{ display: 'flex', alignItems: 'center' }}>
-                  <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Especificação
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form onSubmit={handleSubmit}>
-                  <Form.Label>Selecione a peça a ser adicionada:</Form.Label>
-                  <Form.Control as="select" value={selectedValue} onChange={handleOptionChange}>
-                    <option selected disabled value="">
-                      Selecione...
-                    </option>
-                    {options.map(option => (
-                      <option key={option.id} value={option.id}>
-                        {option.nome}
-                      </option>
-                    ))}
-                  </Form.Control>
-                  {selectedValue && (
-                    <>
-                      {subForms.length > 0 ? (
-                        renderSubForms()
-                      ) : (
-                        <div>Carregando...</div>
-                      )}
-                    </>
+      function renderEspecificacaoModal() {
+        return (
+          <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title style={{ display: 'flex', alignItems: 'center' }}>
+              <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Especificação
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={handleSubmit} name="formsEspecificaco">
+              <Form.Label>Selecione a peça a ser adicionada:</Form.Label>
+              <Form.Control as="select" value={selectedValue} onChange={handleOptionChange}>
+                <option selected disabled value="">
+                  Selecione...
+                </option>
+                {options.map(option => (
+                  <option key={option.id} value={option.id}>
+                    {option.nome}
+                  </option>
+                ))}
+              </Form.Control>
+              {selectedValue && (
+                <>
+                  {subForms.length > 0 ? (
+                    renderSubForms()
+                  ) : (
+                    <div>Carregando...</div>
                   )}
-                </Form>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                  Cancelar
-                </Button>
-                <Button variant="primary" type="submit">
-                  Adicionar
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          ) 
-          : tipoCadastro === 'C' ? 
-          (
-            <Modal show={show} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title style={{ display: 'flex', alignItems: 'center' }}>
-                  <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Categoria
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form onSubmit={handleSubmitCategoria}>
+                </>
+              )}
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button variant="primary" type= "submit" onClick={handleSubmit}>
+              Adicionar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        );
+      }
+      
+      function renderCategoriaModal() {
+        return (
+          <Modal show={show} onHide={handleClose}>
+            <Form onSubmit={handleSubmitCategoria}>
+                <Modal.Header closeButton>
+                  <Modal.Title style={{ display: 'flex', alignItems: 'center' }}>
+                    <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Categoria
+                  </Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
                     <div className="form-group">
                       <div className='elements'>
                         <Form.Control type="text" placeholder="Nome" value={nome}
@@ -288,19 +311,23 @@ function ModalCad({show, handleClose, tipoCadastro}) {
                           </div>
                         ))}
                     </div>
-                </Form>
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                   Cancelar
                 </Button>
-                <Button variant="primary" type= "submit" onClick={handleSubmitCategoria}>
+                <Button variant="primary" type= "submit">
                   Adicionar
                 </Button>
               </Modal.Footer>
+              </Form> 
             </Modal>
-          )
-           : null}
+        );
+      }
+      return (
+        <>
+          {tipoCadastro === 'E' ? renderEspecificacaoModal() : null}
+          {tipoCadastro === 'C' ? renderCategoriaModal() : null}
         </>
       );
       

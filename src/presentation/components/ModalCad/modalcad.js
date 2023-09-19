@@ -6,7 +6,7 @@ import Axios from '../../../infra/api/Axios'
 import { BsFillPlusCircleFill }  from 'react-icons/bs'
 import './modalcad.css'
 
-function ModalCad({show, handleClose, tipoCadastro, toastInfo, setToastInfo}) {
+function ModalCad({show, handleClose, tipoCadastro, setToastInfo}) {
   const [nome, setNome] = useState('');
   const [tipo, setTipo] = useState('');
   const [atributos, setAtributos] = useState(['', '', '']);
@@ -85,7 +85,7 @@ function ModalCad({show, handleClose, tipoCadastro, toastInfo, setToastInfo}) {
         setToastInfo({
           show: true,
           tipo: 'erro',
-          mensagem: `Erro  ${err.response.status} : ${err.response.data.message}`,
+          mensagem: `Erro  ${err.response.status} : ${err.response.data.message}.`,
         });
         console.error("Erro na solicitação:", err);
       }
@@ -132,7 +132,7 @@ function ModalCad({show, handleClose, tipoCadastro, toastInfo, setToastInfo}) {
               {mostrarValue && (
                 <div>  {/* first input quantidade  */ } 
                   <Form.Label>Insira a quantidade:</Form.Label>
-                  <Form.Control type="number" id="saldo" name="saldo"/>
+                  <Form.Control type="number" id="saldo" name="saldo" required/>
                   {console.log("teste 1")}
                 </div>
               )}
@@ -145,7 +145,7 @@ function ModalCad({show, handleClose, tipoCadastro, toastInfo, setToastInfo}) {
                       {Object.keys(subForm).filter(key => key.startsWith('atrib') ).map(catKey => (
                         <div key={catKey}>
                           <Form.Label>{subForm[catKey]}</Form.Label>
-                          <Form.Control type="text" name={catKey} id={catKey} />
+                          <Form.Control type="text" name={catKey} id={catKey} required/>
                           {console.log("teste 3")}
                         </div>
                       ))}
@@ -182,7 +182,7 @@ function ModalCad({show, handleClose, tipoCadastro, toastInfo, setToastInfo}) {
           });      
         });
     
-        console.log('Quantidade :', saldo);
+        console.log('Quantidade :', saldo);    
         
         for (let [key, value] of formData.entries()) {
           formDataJson[key] = value;
@@ -190,12 +190,20 @@ function ModalCad({show, handleClose, tipoCadastro, toastInfo, setToastInfo}) {
         formDataJson.fk_categorias_id = fk_categorias_id;
         console.log(formDataJson);
         try {
-          const response = await Axios.post("/especificacoes", formDataJson);
-          console.log(response.data);
-          alert("Peça cadastrada com sucesso");
+          const res = await Axios.post("/especificacoes", formDataJson);
+          console.log(res.data);
+          setToastInfo({
+            show: true,
+            tipo: 'sucesso',
+            mensagem: `${res.status} : ${res.data.message}.`,
+          });
         } catch (error) {
           console.error(error);
-          alert("Erro ao cadastrar peça");
+          setToastInfo({
+            show: true,
+            tipo: 'erro',
+            mensagem: `Erro ao cadastrar especificação.`,
+          });
         }
         handleClose();
       };
@@ -203,13 +211,13 @@ function ModalCad({show, handleClose, tipoCadastro, toastInfo, setToastInfo}) {
       function renderEspecificacaoModal() {
         return (
           <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title style={{ display: 'flex', alignItems: 'center' }}>
-              <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Especificação
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
             <Form onSubmit={handleSubmit} name="formsEspecificaco">
+              <Modal.Header closeButton>
+                <Modal.Title style={{ display: 'flex', alignItems: 'center' }}>
+                <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Especificação
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
               <Form.Label>Selecione a peça a ser adicionada:</Form.Label>
               <Form.Control as="select" value={selectedValue} onChange={handleOptionChange}>
                 <option selected disabled value="">
@@ -230,16 +238,17 @@ function ModalCad({show, handleClose, tipoCadastro, toastInfo, setToastInfo}) {
                   )}
                 </>
               )}
-            </Form>
+
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button variant="primary" type= "submit" onClick={handleSubmit}>
+            <Button variant="primary" type= "submit">
               Adicionar
             </Button>
           </Modal.Footer>
+        </Form>
         </Modal>
         );
       }

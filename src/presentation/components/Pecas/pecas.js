@@ -16,6 +16,7 @@ const Pecas = () => {
     const [exibirModalE, setExibirModalE] = useState(false);
     const [exibirModalC, setExibirModalC] = useState(false);
     const [tipoCadastro, setTipoCadastro] = useState('');
+    const [nomes, setNomes] = useState('');
     const [toastInfo, setToastInfo] = useState({
         show: false,
         tipo: '',
@@ -47,8 +48,13 @@ const Pecas = () => {
     useEffect(() => {
         Axios.get("/especificacoes")
         .then(res => {
-           setData(res.data);
-        })
+            const dados = res.data;
+            const dataComNomesCategoria = dados.map(item => ({
+              ...item,
+              nomes: item.categoria.nome,
+            }));
+            setData(dataComNomesCategoria);
+          })
         .catch(err => console.log(err));
     }, []);
 
@@ -57,14 +63,12 @@ const Pecas = () => {
     }
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70},
-        { field: 'modelo', headerName: 'Modelo', width: 150 },
+        { field: 'id', headerName: 'ID', width: 100},
         { field: 'SKU', headerName: 'SKU', width: 150 },
-        { field: 'nome', headerName: 'Nome', width: 200 },
-        { field: 'is_active', headerName: 'Status', width: 120, renderCell: (params) => params.value ? 'ATIVA' : 'INATIVA' },
-        { field: 'saldo', headerName: 'Saldo', width: 120 },
+        { field: 'nomes', headerName: 'Nome', width: 175 },
         { field: 'marca', headerName: 'Marca', width: 150 },
-        { field: 'tipo', headerName: 'Tipo', width: 150, renderCell: (params) => params.value === 'P' ? 'PEÇA' : (params.value === 'E' ? 'EQUIPAMENTO' : '') },
+        { field: 'modelo', headerName: 'Modelo', width: 150 },
+        { field: 'is_active', headerName: 'Status', width: 150, renderCell: (params) => params.value ? 'ATIVA' : 'INATIVA' },
       ];
 
     return (
@@ -97,13 +101,19 @@ const Pecas = () => {
                 setToastInfo={setToastInfo}
             />
 
-            <div style={{ height: 700, width: '100%', margin: 'auto' }}>
+            <div style={{ width: '100%', margin: 'auto' }}>
                 <DataGrid
                     rows={data}
                     columns={columns}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
                     onRowClick={(params) => redirecionar(params.row.id)}
+                    initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 10,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[10]}
                 />
             </div>
             <ToastComponent

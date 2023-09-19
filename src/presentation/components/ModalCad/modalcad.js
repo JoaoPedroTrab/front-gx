@@ -6,27 +6,28 @@ import Axios from '../../../infra/api/Axios'
 import { BsFillPlusCircleFill }  from 'react-icons/bs'
 import './modalcad.css'
 
-function ModalCad({show, handleClose, tipoCadastro, setToastInfo}) {
+function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdate}) {
   const [nome, setNome] = useState('');
   const [tipo, setTipo] = useState('');
   const [atributos, setAtributos] = useState(['', '', '']);
   const [selectedValue, setSelectedValue] = useState("");
-  const [options, setOptions] = React.useState([]);
+  const [options, setOptions] = useState([]);
   const [mostrarValue, setMostrarValue] = useState(false);
+  const [categoriaChanged, setCategoriaChanged] = useState(Date.now());
   const [subForms, setSubForms] = useState([]);
 
     useEffect(() => {
         async function fetchOptionsData() {
         try {
             const res = await Axios.get('/categorias');
-            console.log(res)
+            console.log(categoriaChanged);
             setOptions(res.data);
         } catch (err) {
             console.error(err);
         }
     }
     fetchOptionsData();
-    }, []);
+    }, [categoriaChanged]);
 
 
     useEffect(() => {
@@ -89,6 +90,8 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo}) {
         });
         console.error("Erro na solicitação:", err);
       }
+      setCategoriaChanged(Date.now());
+      console.log(categoriaChanged);
       handleClose();
     };
       
@@ -133,6 +136,10 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo}) {
                 <div>  {/* first input quantidade  */ } 
                   <Form.Label>Insira a quantidade:</Form.Label>
                   <Form.Control type="number" id="saldo" name="saldo" required/>
+                  <Form.Label>Insira a MARCA:</Form.Label>
+                  <Form.Control type="text" id="marca" name="marca" required/>
+                  <Form.Label>Insira a MODELO:</Form.Label>
+                  <Form.Control type="text" id="modelo" name="modelo" required/>
                   {console.log("teste 1")}
                 </div>
               )}
@@ -188,6 +195,7 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo}) {
           formDataJson[key] = value;
         }
         formDataJson.fk_categorias_id = fk_categorias_id;
+        console.log('aaaaaaa');
         console.log(formDataJson);
         try {
           const res = await Axios.post("/especificacoes", formDataJson);
@@ -197,6 +205,7 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo}) {
             tipo: 'sucesso',
             mensagem: `${res.status} : ${res.data.message}.`,
           });
+
         } catch (error) {
           console.error(error);
           setToastInfo({
@@ -205,6 +214,7 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo}) {
             mensagem: `Erro ao cadastrar especificação.`,
           });
         }
+        setUltimoUpdate(Date.now());
         handleClose();
       };
     

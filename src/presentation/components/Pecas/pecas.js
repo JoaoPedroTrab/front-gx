@@ -16,7 +16,7 @@ const Pecas = () => {
     const [exibirModalE, setExibirModalE] = useState(false);
     const [exibirModalC, setExibirModalC] = useState(false);
     const [tipoCadastro, setTipoCadastro] = useState('');
-    const [nomes, setNomes] = useState('');
+    const [ultimoUpdate, setUltimoUpdate] = useState(Date.now());
     const [toastInfo, setToastInfo] = useState({
         show: false,
         tipo: '',
@@ -46,17 +46,22 @@ const Pecas = () => {
       };
 
     useEffect(() => {
-        Axios.get("/especificacoes")
-        .then(res => {
+        const fetchData = async () => {       
+        try {
+            const res = await Axios.get("/especificacoes");
             const dados = res.data;
             const dataComNomesCategoria = dados.map(item => ({
               ...item,
               nomes: item.categoria.nome,
             }));
             setData(dataComNomesCategoria);
-          })
-        .catch(err => console.log(err));
-    }, []);
+          } catch(error) { 
+            console.log(error);
+          };
+        };
+        fetchData();
+      }, [ultimoUpdate]);
+
 
     function redirecionar(id) {
         navigate(`/pecas/${id}`);  
@@ -64,7 +69,7 @@ const Pecas = () => {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 100},
-        { field: 'SKU', headerName: 'SKU', width: 150 },
+        { field: 'sku', headerName: 'SKU', width: 250 },
         { field: 'nomes', headerName: 'Nome', width: 175 },
         { field: 'marca', headerName: 'Marca', width: 150 },
         { field: 'modelo', headerName: 'Modelo', width: 150 },
@@ -91,7 +96,8 @@ const Pecas = () => {
                 tipoCadastro = {tipoCadastro}
                 toastInfo={toastInfo} 
                 setToastInfo={setToastInfo}
-            />
+                setUltimoUpdate={setUltimoUpdate}
+              />
 
             <ModalCad 
                 show={exibirModalC} 
@@ -99,7 +105,8 @@ const Pecas = () => {
                 tipoCadastro= {tipoCadastro}   
                 toastInfo={toastInfo} 
                 setToastInfo={setToastInfo}
-            />
+                fetchData
+              />
 
             <div style={{ width: '100%', margin: 'auto' }}>
                 <DataGrid

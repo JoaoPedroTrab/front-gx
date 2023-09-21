@@ -14,7 +14,7 @@ function RouterApp() {
                 <Route path="/" element={<Login/>}/>
                 <Route path="/menu" element={<Menu/>}/>
                 <Route path="/cadastros" element={<Cadastro/>}/>
-                <Route path="/pecas" element={<Pecas/>}/>
+                <Route path="/painel" element={<Pecas/>}/>
                 <Route path="/categoria/cadastro" element={<CadastrarCategoria/>}/> "
             </Routes>
         </Router>

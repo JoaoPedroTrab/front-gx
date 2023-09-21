@@ -17,18 +17,19 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
   const [subForms, setSubForms] = useState([]);
 
     useEffect(() => {
-        async function fetchOptionsData() {
-        try {
-            const res = await Axios.get('/categorias');
-            console.log(categoriaChanged);
-            setOptions(res.data);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-    fetchOptionsData();
-    }, [categoriaChanged]);
+      loadOptions();
+    }, []);
 
+    async function loadOptions() {
+      console.log("realizando LoadOptions");
+      try {
+        const res = await Axios.get(`/categorias`);
+        setOptions(res.data);
+        console.log(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
     useEffect(() => {
         if(selectedValue) {
@@ -37,6 +38,7 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
     }, [selectedValue]);
 
     async function handleOptionChange(e) {
+        loadOptions();  
         const optionId = e.target.value;
         setSelectedValue(optionId);
         try {
@@ -48,7 +50,6 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
     }
 
     const handleSubmitCategoria = async (e) => {
-      console.log("submit categoria")
       e.preventDefault();
       const dados = {
         nome,
@@ -90,8 +91,7 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
         });
         console.error("Erro na solicitação:", err);
       }
-      setCategoriaChanged(Date.now());
-      console.log(categoriaChanged);
+      loadOptions();
       handleClose();
     };
       
@@ -136,9 +136,9 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
                 <div>  {/* first input quantidade  */ } 
                   <Form.Label>Insira a quantidade:</Form.Label>
                   <Form.Control type="number" id="saldo" name="saldo" required/>
-                  <Form.Label>Insira a MARCA:</Form.Label>
+                  <Form.Label>Insira a marca:</Form.Label>
                   <Form.Control type="text" id="marca" name="marca" required/>
-                  <Form.Label>Insira a MODELO:</Form.Label>
+                  <Form.Label>Insira o modelo:</Form.Label>
                   <Form.Control type="text" id="modelo" name="modelo" required/>
                   {console.log("teste 1")}
                 </div>
@@ -151,7 +151,7 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
                     <div key={subForm.id}>
                       {Object.keys(subForm).filter(key => key.startsWith('atrib') ).map(catKey => (
                         <div key={catKey}>
-                          <Form.Label>{subForm[catKey]}</Form.Label>
+                          <Form.Label>Insira a/o  {subForm[catKey]}:</Form.Label>
                           <Form.Control type="text" name={catKey} id={catKey} required/>
                           {console.log("teste 3")}
                         </div>
@@ -228,8 +228,8 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form.Label>Selecione a peça a ser adicionada:</Form.Label>
-              <Form.Control as="select" value={selectedValue} onChange={handleOptionChange}>
+              <Form.Label>Selecione a especificação a ser adicionada:</Form.Label>
+              <Form.Control as="select" value={selectedValue} onChange={handleOptionChange} onClick={loadOptions}>
                 <option selected disabled value="">
                   Selecione...
                 </option>

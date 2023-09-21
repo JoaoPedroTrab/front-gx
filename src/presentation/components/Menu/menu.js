@@ -27,7 +27,7 @@ const Menu = () => {
                     </Link> 
                 </div>
                 <div className='down'>  {/*Buttons da parte de baixo, Listar P. e Relatório*/}
-                    <Link to="/pecas">
+                    <Link to="/painel">
                         <div className='buttonThree'>
                             <div className='text-button'>
                                 <AiOutlineBars />

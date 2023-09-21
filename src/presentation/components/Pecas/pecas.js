@@ -64,7 +64,7 @@ const Pecas = () => {
 
 
     function redirecionar(id) {
-        navigate(`/pecas/${id}`);  
+        navigate(`peca/${id}`);  
     }
 
     const columns = [

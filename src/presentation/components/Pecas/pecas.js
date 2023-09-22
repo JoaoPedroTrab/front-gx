@@ -45,16 +45,37 @@ const Pecas = () => {
         setExibirModalC(false);
       };
 
-    useEffect(() => {
+      useEffect(() => {
         const fetchData = async () => {       
-        try {
-            const res = await Axios.get("/especificacoes");
-            const dados = res.data;
-            const dataComNomesCategoria = dados.map(item => ({
-              ...item,
-              nomes: item.categoria.nome,
-            }));
+            try {
+                const res = await Axios.get("/especificacoes");
+                const dados = res.data;
+                console.log(res.data);
+                const dataComNomesCategoria = dados.map(item => {
+                  const newItem = {
+                    ...item,
+                    nomes: item.categoria.nome,
+                    tipo: item.categoria.tipo,
+                    status: item.is_active,
+                  };
+                    
+                if (item.categoria.tipo === 'P') {
+                  newItem.tipo = 'Peça';
+
+                } else if (item.categoria.tipo === 'E'){
+                  newItem.tipo = 'Equipamento';
+                }
+
+                if (item.is_active === true) {
+                  newItem.is_active = 'ATIVA';
+                } else {
+                  newItem.is_active = 'INATIVA';
+                }
+
+                  return newItem;
+              });
             setData(dataComNomesCategoria);
+            console.log(dataComNomesCategoria);
           } catch(error) { 
             console.log(error);
           };
@@ -73,7 +94,8 @@ const Pecas = () => {
         { field: 'nomes', headerName: 'Nome', width: 175 },
         { field: 'marca', headerName: 'Marca', width: 150 },
         { field: 'modelo', headerName: 'Modelo', width: 150 },
-        { field: 'is_active', headerName: 'Status', width: 150, renderCell: (params) => params.value ? 'ATIVA' : 'INATIVA' },
+        { field: 'tipo', headerName: 'Tipo', width: 150},
+        { field: 'is_active', headerName: 'Status', width: 150}
       ];
 
     return (

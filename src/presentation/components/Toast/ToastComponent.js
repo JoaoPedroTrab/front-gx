@@ -1,7 +1,7 @@
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
-function ToastComponent({ show, onClose, tipo, mensagem }) {
+function ToastComponent({ show, onClose, tipo, mensagem}) {
   return (
     <Toast onClose={onClose} show={show} autohide delay={5000}
       style={{

@@ -1,34 +1,81 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Axios from '../../../infra/api/Axios';
+import {useNavigate} from 'react-router-dom';
 import { useCallback } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 export default function SubPecas() {
-
+    const navigate = useNavigate();
     const [dados, setDados] = useState(null);
+    const [isChanging, setIsChanging] = useState(false);
+    const [isActive, setIsActive] = useState(true);
     let { id } = useParams();
 
     const loadIdInfo = useCallback(async () => {
         try {
             const res = await Axios.get(`/especificacoes/${id}`);
             console.log(res.data[0]);
+            console.log(res.data[0]);
             setDados(res.data[0]);
         } catch (error) {
-            console.log(error);
+            console.log(error.response.status);
+            if (error.response.status === 404) { 
+               navigate('/erro/peca/404  ')
+            }
         }
     }, [id]);
 
     useEffect(() => {
         loadIdInfo();
-    }, [loadIdInfo]);
+    }, []);
 
+    function changeQuantidade() {
+        setIsChanging(isActive);
+    } 
+    
+    function changeStatus() {
+        setIsActive(!isActive);
+    }
+
+    function submitAtualizacoes(e) {
+        e.preventDefault();
+        alert('submit funcionou');
+    }
 
     return (
         <div>
         {dados && (
-            <div>
+            <div>                
+                <Form onSubmit={submitAtualizacoes}>
+                <Button 
+                    variant="warning"
+                    onClick={changeQuantidade}
+                    disabled={!isActive} 
+                    > Adicionar/Remover </Button>
+
+                <Button 
+                    variant="danger"
+                    onClick={changeStatus}
+                    > Inativar </Button>
+
+                    <Form.Check
+                        type="switch"
+                        id="custom-switch"
+                        label={`${isActive ? "Inativar Peça" : "Ativar Peça"}`}
+                        defaultChecked
+                        onClick={changeStatus}
+                    />
+
                 <h3> ID: {dados.id} </h3>
-                <h3> TIPO: {dados.categoria.nome} </h3>
+                <h3> TIPO:</h3>
+                <Form.Control
+                type="text"
+                placeholder={`${dados.categoria.nome}`}
+                disabled={!isChanging}
+                readOnly={!isChanging}
+                />
                 <h3> MARCA: {dados.marca} </h3>
                 <h3> MODELO: {dados.modelo} </h3>
                 <h3> QUANTIDADE: {dados.saldo} </h3>
@@ -45,7 +92,7 @@ export default function SubPecas() {
                     <h3> ATRIB6{dados.categoria.atrib6}: {dados.atrib6} </h3>
                 )}
                 <h3> SKU: {dados.sku} </h3>
-
+                </Form>
             </div>
             )}
         </div>

@@ -13,7 +13,6 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
   const [selectedValue, setSelectedValue] = useState("");
   const [options, setOptions] = useState([]);
   const [mostrarValue, setMostrarValue] = useState(false);
-  const [categoriaChanged, setCategoriaChanged] = useState(Date.now());
   const [subForms, setSubForms] = useState([]);
 
     useEffect(() => {
@@ -211,7 +210,7 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
           setToastInfo({
             show: true,
             tipo: 'erro',
-            mensagem: `Erro ao cadastrar especificação.`,
+            mensagem: `Erro ao cadastrar peça.`,
           });
         }
         setUltimoUpdate(Date.now());
@@ -224,11 +223,11 @@ function ModalCad({show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdat
             <Form onSubmit={handleSubmit} name="formsEspecificaco">
               <Modal.Header closeButton>
                 <Modal.Title style={{ display: 'flex', alignItems: 'center' }}>
-                <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Especificação
+                <BsFillPlusCircleFill style={{ marginRight: '10px' }} /> Adicionar Peça
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form.Label>Selecione a especificação a ser adicionada:</Form.Label>
+              <Form.Label>Selecione o tipo de peça a ser adicionada:</Form.Label>
               <Form.Control as="select" value={selectedValue} onChange={handleOptionChange} onClick={loadOptions}>
                 <option selected disabled value="">
                   Selecione...

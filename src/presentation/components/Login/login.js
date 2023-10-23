@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import pms from '../../assets/logo_pms.png'; 
+import pms from '../../assets/logo_pms.png';
 import './login.css';
 import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Axios from '../../../infra/api/Axios.js';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
@@ -13,7 +13,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [erro, setErro] = useState('');
 
-    async function handleSubmit (e) { 
+    async function handleSubmit(e) {
         e.preventDefault();
 
         try {
@@ -26,7 +26,7 @@ const Login = () => {
                 localStorage.setItem('token', tokenRecebido); //armazena o token no localstorage
                 navigate('/pecas'); //redireciona para a rota /menu  
             }
-        }catch (err) {
+        } catch (err) {
             console.error(err);
             setErro('Usuário ou senha incorretos.'); //ver depois como jp manda do banco 
         }
@@ -35,12 +35,12 @@ const Login = () => {
 
     return (
         <div className="container-fluid">
-            <div className="row"> 
+            <div className="row">
                 <div className="col-md-12">
-                    <di className="login-container">
+                    <div className="login-container">
                         <div className="login">
                             <div className="logo">
-                                <img src={pms} alt="logo" className='img-fluid'/>
+                                <img src={pms} alt="logo" className='img-fluid' />
                                 <h1 className='loginTitulo'><b>ESTOQUE</b></h1>
                             </div>
                             {erro && ( // Verifica se há erro para exibir a mensagem
@@ -52,11 +52,11 @@ const Login = () => {
                                 <div className="form-group">
                                     <div className='elements'>
                                         <Form.Control type="text" placeholder="Usuário" value={usuario}
-                                        onChange={e => setUsuario(e.target.value)} required/>
+                                            onChange={e => setUsuario(e.target.value)} required />
                                     </div>
-                                    <div className='elements'> 
+                                    <div className='elements'>
                                         <Form.Control type="password" placeholder="Senha" value={senha}
-                                        onChange={e => setSenha(e.target.value)} required/>
+                                            onChange={e => setSenha(e.target.value)} required />
                                     </div>
                                 </div>
                                 <div className='elements'>
@@ -64,11 +64,11 @@ const Login = () => {
                                 </div>
                             </form>
                         </div>
-                    </di>
+                    </div>
                 </div>
             </div>
         </div>
-    );    
+    );
 }
 
 export default Login;

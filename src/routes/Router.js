@@ -1,4 +1,5 @@
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from '../presentation/pages/rotaLogin.js';
 import Pecas from '../presentation/pages/rotaPecas.js';
 import SubPecas from '../presentation/pages/rotaSubPecas.js';

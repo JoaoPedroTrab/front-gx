@@ -1,6 +1,6 @@
+import React from 'react';
 import SubPecas from '../components/SubPecas/SubPecas.js';
 import HeaderPMS from '../components/Header/header.js';
-
 
 function routeSubPecas() {
     return (

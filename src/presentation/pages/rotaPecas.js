@@ -1,3 +1,4 @@
+import React from 'react';
 import Pecas from '../components/Pecas/pecas.js';
 import HeaderPMS from '../components/Header/header.js';
 

@@ -1,17 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-<<<<<<< HEAD
-    "\\src"
-  ],
-  "SelectedNode": "\\package-lock.json",
-=======
     "\\src",
     "\\src\\presentation",
-    "\\src\\presentation\\components",
-    "\\src\\presentation\\pages"
+    "\\src\\presentation\\pages",
+    "\\src\\routes"
   ],
-  "SelectedNode": "\\src\\presentation\\components",
->>>>>>> 1f099c22e40213232d5607d4a26ed4ad8c04ddb8
+  "SelectedNode": "\\src\\index.js",
   "PreviewInSolutionExplorer": false
 }

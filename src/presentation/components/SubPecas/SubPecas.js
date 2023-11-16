@@ -12,6 +12,8 @@ export default function SubPecas() {
     const [dados, setDados] = useState(null);
     const [isChanging, setIsChanging] = useState(false);
     const [isActive, setIsActive] = useState(true);
+    const [quantidade, setQuantidade] = useState(997);
+    const [soma, setSoma] = useState(0);
     let { id } = useParams();
 
     const loadIdInfo = useCallback(async () => {
@@ -39,6 +41,24 @@ export default function SubPecas() {
     function submitAtualizacoes(e) {
         e.preventDefault();
         alert('submit funcionou');
+    }
+
+
+
+    const changeQuantidade = (operacao) => {
+        if (operacao === 'MAIS') {
+            setQuantidade(quantidade + 1);
+            setSoma(soma + 1);
+            console.log(` Quantidade atual ${quantidade} Soma realizadas ${soma}`);
+        } else if (operacao === 'MENOS') { 
+            setQuantidade(quantidade - 1);
+            setSoma(soma - 1);
+            console.log(` Quantidade atual ${quantidade} Soma realizadas ${soma}`);
+        }
+    }
+
+    const verSoma = () => {
+        console.log(soma);
     }
 
    /*    
@@ -120,26 +140,30 @@ export default function SubPecas() {
                                 </div>
                                 <div className='info'>
                                     <h3> Quantidade</h3>
-                                    <div className='buttons-quantidade'>
+                                    <div className='buttons-quantidade'>  
                                         <Button 
-                                        variant="dark"
-                                        disabled={!isActive}
-                                        className='inputsQuantidade'>
-                                            +
-                                        </Button>    
+                                            variant="dark"
+                                            className='inputsQuantidade'
+                                            disabled={!isActive || quantidade === 0}
+                                            onClick={() => changeQuantidade('MENOS')}
+                                        >
+                                            -
+                                        </Button>
                                     </div>
                                     <Form.Control
                                         type="text"
-                                        placeholder={`XXXX`}
+                                        placeholder={quantidade}
                                         readOnly
                                         style={{ width: '80px', backgroundColor: 'rgba(200, 200, 200)', textAlign: 'center' }}
                                     />
                                     <div className='buttons-quantidade'>
-                                        <Button 
-                                        variant="dark"
-                                        className='inputsQuantidade'
-                                        disabled={!isActive}>
-                                            -
+                                        <Button
+                                            variant="dark"
+                                            disabled={!isActive || quantidade >= 999}
+                                            className='inputsQuantidade'
+                                            onClick={() => changeQuantidade('MAIS')}
+                                        >
+                                            +
                                         </Button>
                                     </div>
                                 </div>
@@ -151,7 +175,9 @@ export default function SubPecas() {
                                 onClick={changeStatus}
                             > {`${isActive ? "Inativar" : "Ativar"}`}</Button>
                             <Button
-                                variant='dark'>
+                                variant='dark'
+                                onClick={verSoma}
+                            >
                                 Atualizar
                             </Button>
                         </div>

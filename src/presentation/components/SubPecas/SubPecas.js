@@ -49,11 +49,11 @@ export default function SubPecas() {
         if (operacao === 'MAIS') {
             setQuantidade(quantidade + 1);
             setSoma(soma + 1);
-            console.log(` Quantidade atual ${quantidade} Soma realizadas ${soma}`);
+            console.log(` Quantidade atual ${quantidade} Soma realizadas ${soma}`);  // teste - resultados imprecisos - demora atualizar
         } else if (operacao === 'MENOS') { 
             setQuantidade(quantidade - 1);
             setSoma(soma - 1);
-            console.log(` Quantidade atual ${quantidade} Soma realizadas ${soma}`);
+            console.log(` Quantidade atual ${quantidade} Soma realizadas ${soma}`); // teste - resultados imprecisos - demora atualizar
         }
     }
 
@@ -145,14 +145,14 @@ export default function SubPecas() {
                                             variant="dark"
                                             className='inputsQuantidade'
                                             disabled={!isActive || quantidade === 0}
-                                            onClick={() => changeQuantidade('MENOS')}
+                                            onClick={() => changeQuantidade('MENOS')} // operacao diminuir quantidade
                                         >
                                             -
                                         </Button>
                                     </div>
                                     <Form.Control
                                         type="text"
-                                        placeholder={quantidade}
+                                        placeholder={quantidade.toString} 
                                         readOnly
                                         style={{ width: '80px', backgroundColor: 'rgba(200, 200, 200)', textAlign: 'center' }}
                                     />
@@ -161,7 +161,7 @@ export default function SubPecas() {
                                             variant="dark"
                                             disabled={!isActive || quantidade >= 999}
                                             className='inputsQuantidade'
-                                            onClick={() => changeQuantidade('MAIS')}
+                                            onClick={() => changeQuantidade('MAIS')} // verifica se a operação a ser feita é uma adição
                                         >
                                             +
                                         </Button>
@@ -176,7 +176,7 @@ export default function SubPecas() {
                             > {`${isActive ? "Inativar" : "Ativar"}`}</Button>
                             <Button
                                 variant='dark'
-                                onClick={verSoma}
+                                onClick={verSoma} //verificando valor
                             >
                                 Atualizar
                             </Button>

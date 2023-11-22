@@ -23,12 +23,12 @@ const Login = () => {
             }); //caso a validaçao da api /entrar retorne sem nenhum erro entra nesse if    
             if (!res.data.erro) {
                 const tokenRecebido = res.data.token //armazena o token na variavel tokenrecebido
-                localStorage.setItem('token', tokenRecebido); //armazena o token no localstorage
+                //fazer o armazenar em cookies
                 navigate('/pecas'); //redireciona para a rota /menu  
             }
         } catch (err) {
             console.error(err);
-            setErro('Usuário ou senha incorretos.'); //ver depois como jp manda do banco 
+            setErro('Usuário ou senha incorretos.'); //
         }
 
     };

@@ -2,10 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\presentation",
-    "\\src\\presentation\\pages",
+    "\\src\\presentation\\components",
     "\\src\\routes"
   ],
-  "SelectedNode": "\\src\\index.js",
+  "SelectedNode": "\\src\\infra",
   "PreviewInSolutionExplorer": false
 }

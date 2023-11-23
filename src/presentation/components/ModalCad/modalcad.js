@@ -90,7 +90,11 @@ function ModalCad({ show, handleClose, tipoCadastro, setToastInfo, setUltimoUpda
         mensagem: `Erro  ${err.response.status} : ${err.response.data.message}.`,
       });
       console.error("Erro na solicitação:", err);
-    }
+      }
+      //limpar
+      setNome('');
+      setTipo('');
+      setAtributos(['', '', '']);
     loadOptions();
     handleClose();
   };

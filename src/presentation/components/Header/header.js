@@ -9,7 +9,6 @@ import Axios from '../../../infra/api/Axios.js';
 import { useEffect } from 'react';
 import Cookies from "js-cookie";
 
-
 function Header() {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [data, setData] = useState([]);

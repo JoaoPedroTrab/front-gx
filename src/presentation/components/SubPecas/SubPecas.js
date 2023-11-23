@@ -5,11 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Loading from '../Loading/loading';
 import './SubPecas.css'
 
 export default function SubPecas() {
     const navigate = useNavigate();
     const [dados, setDados] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [isChanging, setIsChanging] = useState(false);
     const [isActive, setIsActive] = useState(true);
     const [quantidade, setQuantidade] = useState(997);
@@ -20,13 +22,14 @@ export default function SubPecas() {
         try {
             const res = await Axios.get(`/especificacoes/${id}`);
             console.log(res.data[0]);
-            console.log(res.data[0]);
             setDados(res.data[0]);
         } catch (error) {
             console.log(error.response.status);
             if (error.response.status === 404) {
                 navigate('/painel')
             }
+        } finally {
+            setIsLoading(false);
         }
     }, [id, navigate]);
 
@@ -42,8 +45,6 @@ export default function SubPecas() {
         e.preventDefault();
         alert('submit funcionou');
     }
-
-
 
     const changeQuantidade = (operacao) => {
         if (operacao === 'MAIS') {
@@ -72,7 +73,10 @@ export default function SubPecas() {
 */
     return (
         <div className='container'>
-            {dados && (
+            
+            {isLoading ? (
+                <Loading />
+            ) : (
                 <div className='center'>
                     <div className='formSP'>
                         <Form onSubmit={submitAtualizacoes}>
@@ -152,7 +156,7 @@ export default function SubPecas() {
                                     </div>
                                     <Form.Control
                                         type="text"
-                                        placeholder={quantidade.toString} 
+                                        placeholder={quantidade} 
                                         readOnly
                                         style={{ width: '80px', backgroundColor: 'rgba(200, 200, 200)', textAlign: 'center' }}
                                     />
@@ -182,7 +186,7 @@ export default function SubPecas() {
                             </Button>
                         </div>
                     </div>
-                </div>
+                </div >
             )}
         </div>
     );

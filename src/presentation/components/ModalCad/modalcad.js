@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import Axios from '../../../infra/api/Axios'
-import { BsFillPlusCircleFill } from 'react-icons/bs'
-import './modalcad.css'
+import Axios from '../../../infra/api/Axios';
+import Loading from '../Loading/loading';
+import { BsFillPlusCircleFill } from 'react-icons/bs';
+import './modalcad.css';
 
 function ModalCad({ show, handleClose, tipoCadastro, setToastInfo, setUltimoUpdate }) {
   const [nome, setNome] = useState('');
@@ -193,9 +194,8 @@ function ModalCad({ show, handleClose, tipoCadastro, setToastInfo, setUltimoUpda
     for (let [key, value] of formData.entries()) {
       formDataJson[key] = value;
     }
-    formDataJson.fk_categorias_id = fk_categorias_id;
-    console.log('aaaaaaa');
-    console.log(formDataJson);
+      formDataJson.fk_categorias_id = fk_categorias_id;
+      console.log('Objeto enviado para o banco:', formDataJson);
     try {
       const res = await Axios.post("/especificacoes", formDataJson);
       console.log(res.data);
@@ -243,7 +243,7 @@ function ModalCad({ show, handleClose, tipoCadastro, setToastInfo, setUltimoUpda
                 {subForms.length > 0 ? (
                   renderSubForms()
                 ) : (
-                  <div>Carregando...</div>
+                    <Loading/>
                 )}
               </>
             )}

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import SearchBar from '../SearchBar/searchBar';
 import Axios from '../../../infra/api/Axios.js';
 import { useEffect } from 'react';
+import Cookies from "js-cookie";
 
 
 function Header() {
@@ -26,7 +27,7 @@ function Header() {
   }
 
   const logoff = () => {
-    localStorage.removeItem('token');
+    Cookies.remove('token');
     window.location.href = '/';
   }
 
